@@ -18,8 +18,21 @@ import argparse
 import os
 from pathlib import Path
 
-# Import strategy module
-from strategies.strategy_sma_gap_momentum import predict_returns
+# Import strategy modules
+from strategies.strategy_sma_gap_momentum import predict_returns as predict_sma
+from strategies.strategy_ensemble_v1 import predict_returns as predict_ensemble
+
+# Strategy mapping
+STRATEGIES = {
+    'sma': {
+        'func': predict_sma,
+        'description': 'SMA Gap Momentum'
+    },
+    'ensemble': {
+        'func': predict_ensemble,
+        'description': 'Multi-Factor Ensemble (v1)'
+    }
+}
 
 
 def load_stock_data(stock_file, data_dir='sample_data'):
@@ -106,20 +119,24 @@ def evaluate(p, t, display=False):
     return den, 1 - den / num
 
 
-def run_single_stock(stock_name, data_dir='sample_data', display=True):
+def run_single_stock(stock_name, strategy_name='sma', data_dir='sample_data', display=True):
     """
     Run prediction on a single stock.
 
     Args:
         stock_name: Stock identifier (e.g., 's1')
+        strategy_name: Name of strategy to use ('sma' or 'ensemble')
         data_dir: Directory containing stock data
         display: If True, show evaluation results
 
     Returns:
         Tuple of (absolute_error, relative_score)
     """
+    strategy_info = STRATEGIES.get(strategy_name, STRATEGIES['sma'])
+
     print(f"\n{'='*60}")
     print(f"Processing Stock: {stock_name}")
+    print(f"Strategy: {strategy_info['description']}")
     print(f"{'='*60}")
 
     # Load data
@@ -127,8 +144,8 @@ def run_single_stock(stock_name, data_dir='sample_data', display=True):
     print(f"Loaded {len(P)} trading days")
 
     # Generate predictions
-    print("Generating predictions using SMA Gap Momentum strategy...")
-    predictions = predict_returns(P, V)
+    print(f"Generating predictions using {strategy_info['description']}...")
+    predictions = strategy_info['func'](P, V)
 
     # Calculate actual returns
     actual_returns = target(P, V)
@@ -145,27 +162,30 @@ def run_single_stock(stock_name, data_dir='sample_data', display=True):
     return abs_error, rel_score
 
 
-def run_all_stocks(data_dir='sample_data'):
+def run_all_stocks(strategy_name='sma', data_dir='sample_data'):
     """
     Run prediction on all 30 stocks.
 
     Args:
+        strategy_name: Name of strategy to use
         data_dir: Directory containing stock data
 
     Returns:
         DataFrame with results for all stocks
     """
     results = []
+    strategy_info = STRATEGIES.get(strategy_name, STRATEGIES['sma'])
 
     print(f"\n{'='*60}")
     print(f"Processing All 30 Stocks")
+    print(f"Strategy: {strategy_info['description']}")
     print(f"{'='*60}\n")
 
     for i in range(1, 31):
         stock_name = f's{i}'
         try:
             # Run without display for batch processing
-            abs_error, rel_score = run_single_stock(stock_name, data_dir, display=False)
+            abs_error, rel_score = run_single_stock(stock_name, strategy_name, data_dir, display=False)
 
             results.append({
                 'stock': stock_name,
@@ -238,6 +258,13 @@ def main():
         help='Run on all 30 stocks'
     )
     parser.add_argument(
+        '--strategy',
+        type=str,
+        default='sma',
+        choices=['sma', 'ensemble'],
+        help='Strategy to use (sma or ensemble)'
+    )
+    parser.add_argument(
         '--data-dir',
         type=str,
         default='sample_data',
@@ -258,7 +285,7 @@ def main():
 
     if args.all:
         # Run on all stocks
-        results_df = run_all_stocks(args.data_dir)
+        results_df = run_all_stocks(args.strategy, args.data_dir)
 
         # Save results if output file specified
         if args.output:
@@ -266,7 +293,7 @@ def main():
             print(f"\nResults saved to: {args.output}")
     else:
         # Run on single stock
-        run_single_stock(args.stock, args.data_dir, display=not args.no_plot)
+        run_single_stock(args.stock, args.strategy, args.data_dir, display=not args.no_plot)
 
 
 if __name__ == '__main__':
