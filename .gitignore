@@ -3,3 +3,6 @@
 **/learn/**
 
 *.zip
+.claude/
+
+**/__pycache__/
