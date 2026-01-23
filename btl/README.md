@@ -28,7 +28,7 @@ btl/
 
 ```bash
 cd /Users/cac.lp/school/252/AA/btl
-source ../.venv/bin/activate
+source ../.venv/bin/activate  # OR use: ../.venv/bin/python main.py
 
 # Single stock
 python main.py --stock s1
@@ -63,6 +63,7 @@ jupyter lab
 ```
 
 Then open:
+
 - `Strategy Analysis and Visualization.ipynb` - Interactive analysis
 - `Sample Assignment.ipynb` - Original assignment
 
@@ -71,6 +72,7 @@ Then open:
 ### Strategies (`strategies/`)
 
 **strategy_sma_gap_momentum.py** (264 lines)
+
 - Core strategy implementation
 - Functions:
   - `sma()` - Simple Moving Average
@@ -82,6 +84,7 @@ Then open:
 ### Tests (`tests/`)
 
 **test_strategy_anomalies.py** (275 lines)
+
 - Anomaly detection testing
 - Detailed statistics and reports
 - Sample anomaly printing
@@ -91,6 +94,7 @@ Then open:
 ### Notebooks (`notebooks/`)
 
 **Strategy Analysis and Visualization.ipynb**
+
 - 14 comprehensive sections
 - 6 interactive Plotly visualizations
 - Performance analysis
@@ -98,6 +102,7 @@ Then open:
 - Runs from notebooks directory
 
 **Sample Assignment.ipynb**
+
 - Original assignment notebook
 - SMA gap momentum cells
 - Visualization examples
@@ -105,6 +110,7 @@ Then open:
 ### Main Script (`main.py`)
 
 **main.py** (264 lines)
+
 - Data loading
 - Prediction execution
 - Performance evaluation
@@ -152,11 +158,13 @@ jupyter lab
 ## Import Structure
 
 ### From main.py (in btl/)
+
 ```python
 from strategies.strategy_sma_gap_momentum import predict_returns
 ```
 
 ### From tests (in tests/)
+
 ```python
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
@@ -168,6 +176,7 @@ from strategies.strategy_sma_gap_momentum import (
 ```
 
 ### From notebooks (in notebooks/)
+
 ```python
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath('')), '..'))
@@ -182,6 +191,7 @@ from strategies import (
 ## Data Files
 
 **sample_data/** contains:
+
 - 30 stock files: `s1.npy` to `s30.npy`
 - Each file: 242 days × 8 columns
 - Columns: [date, open, close, low, high, nsh, volume, adjusted]
@@ -205,6 +215,7 @@ python test_strategy_anomalies.py --stock s1
 ## Performance Metrics
 
 **Current Results (Stock s1):**
+
 - Absolute Error: 0.011635 (target: < 0.005) ✗
 - Relative Score: -0.047226 (target: > 0) ✗
 - Anomaly Rate: 46.7% (113/242 days)
@@ -246,6 +257,7 @@ python main.py --stock s1
 ## Documentation
 
 See `/docs` directory for:
+
 - `python-scripts-guide.md` - Detailed script usage
 - `notebook-visualization-guide.md` - Notebook guide
 - `code-standards.md` - Coding standards
@@ -262,10 +274,12 @@ See `/docs` directory for:
 ## Related Files
 
 **In `/docs`:**
+
 - python-scripts-guide.md
 - notebook-visualization-guide.md
 
 **In `/plans/reports`:**
+
 - script-conversion-260123-1321-notebook-to-python.md
 
 ---
