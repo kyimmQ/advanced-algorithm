@@ -57,6 +57,12 @@ def calculate_features(P, V):
     # Calculate previous price for anomaly detection
     df['Prev_Price'] = df['price'].shift(1)
 
+    # Calculate price direction
+    df['Price_Direction'] = np.where(
+        df['price'] > df['Prev_Price'], 'Up',
+        np.where(df['price'] < df['Prev_Price'], 'Down', 'Flat')
+    )
+
     # Define strategy signals
     df['Strategy_Signal'] = df.apply(
         lambda row: _classify_signal(row['SMA_Diff'], row['Diff_Change']),
