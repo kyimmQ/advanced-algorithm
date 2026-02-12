@@ -1,8 +1,0 @@
-description = "Reads and summarizes the 3 most recent session history files."
-prompt = """
-Please find and read the 3 most recent markdown files in the `history/` directory.
-
-1.  **Find Files:** List files in `history/` matching `session_*.md` and sort them to find the 3 newest ones (based on the timestamp in the filename).
-2.  **Read Content:** Read the content of these 3 files.
-3.  **Summarize:** detailed content of the each file.
-"""
