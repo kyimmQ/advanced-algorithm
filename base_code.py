@@ -11,7 +11,24 @@ P, V = A[:, 2], A[:, 6]
 
 # customize your prediction
 def prediction(P, V):
-    Q = []
+    c = [0.036, -0.041, 0.005, -0.010, 0.025, -0.025, 0.000, -0.005, -0.010, -0.005]
+
+    Q = [0] * len(P)
+    rets = [0] * len(P)
+    for i in range(1, len(P)):
+        rets[i] = P[i] / P[i-1] - 1
+
+    limit = 0.003
+    for i in range(len(P)):
+        if i >= len(c):
+            val = 0
+            for j in range(len(c)):
+                val += rets[i-j] * c[j]
+
+            if val > limit: val = limit
+            elif val < -limit: val = -limit
+            Q[i] = val
+
     return Q
 
 # keep the core function unchanged
